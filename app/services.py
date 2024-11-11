@@ -7,8 +7,6 @@ from app.models import Post
 class PostService:
 
     post_not_found_exception = HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Post was not found")
-
-    duplicate_post_exception = HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Post already exists")
     
     async def create_post(self, post_in: PostSchema, db_session: Session = Depends(get_db)):
         new_post = Post(**post_in.dict())
@@ -25,9 +23,6 @@ class PostService:
         if post is None:
             raise self.post_not_found_exception
         
-        if len(list(post)) > 1:
-            raise self.duplicate_post_exception
-        
         post.title = post_in.title
         post.content = post_in.content
 
@@ -42,9 +37,6 @@ class PostService:
         if post is None:
             raise self.post_not_found_exception
         
-        if len(list(post)) > 1:
-            raise self.duplicate_post_exception
-        
         db_session.delete(post)
         db_session.commit()
 
@@ -55,9 +47,6 @@ class PostService:
 
         if post is None:
             raise self.post_not_found_exception
-        
-        if len(list(post)) > 1:
-            raise self.duplicate_post_exception
         
         return post
     
