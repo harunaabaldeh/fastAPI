@@ -48,7 +48,7 @@ class PostService:
         db_session.delete(post)
         db_session.commit()
 
-        return Response(status_code=204)
+        return Response(status_code=status.HTTP_204_NO_CONTENT)
     
     async def get_post(self, post_id: int, db_session: Session = Depends(get_db)):
         post = db_session.query(Post).filter(Post.id == post_id).one_or_none()
