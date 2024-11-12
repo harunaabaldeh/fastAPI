@@ -24,7 +24,7 @@ async def create_user(user_in: UserCreate, db_session: Session = Depends(get_db)
 
 @router.get('/users/{id}', response_model=UserResponse)
 async def get_user(id: int, db_session: Session = Depends(get_db)):
-    user = db_session.query(User).filter(User.id == id).one_or_none()
+    user = await db_session.query(User).filter(User.id == id).one_or_none()
 
     if user is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User was not found")

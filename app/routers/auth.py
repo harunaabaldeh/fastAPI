@@ -13,7 +13,7 @@ router = APIRouter()
 
 @router.post('/login')
 async def login(user_creds:OAuth2PasswordRequestForm = Depends(), db_session: Session = Depends(get_db)):
-    user = db_session.query(models.User).filter(models.User.email == user_creds.username).one_or_none()
+    user = await db_session.query(models.User).filter(models.User.email == user_creds.username).one_or_none()
 
     if user is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Invalid credentials")
