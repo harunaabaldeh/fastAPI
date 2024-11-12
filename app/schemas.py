@@ -1,9 +1,35 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from typing import Optional
 
 
-class PostSchema(BaseModel):
+class PostBase(BaseModel):
     title: str
     content: str
     published: Optional[bool] = True
-    rating: int = None
+
+
+class PostCreate(PostBase):
+    pass
+
+class Post(PostBase):
+    id: int
+
+
+    class Config:
+        from_attributes = True
+
+class UserCreate(BaseModel):
+    email: EmailStr
+    password: str
+
+
+class UserResponse(BaseModel):
+    id: int
+    email: EmailStr
+
+    class Config:
+        from_attributes = True
+
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str

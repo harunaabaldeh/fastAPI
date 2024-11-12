@@ -1,15 +1,15 @@
 from fastapi import HTTPException, Response, Depends, status
 from app.database import get_db
 from sqlalchemy.orm import Session
-from app.schemas import PostSchema
+from app.schemas import PostCreate
 from app.models import Post
 
 class PostService:
 
     post_not_found_exception = HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Post was not found")
     
-    async def create_post(self, post_in: PostSchema, db_session: Session = Depends(get_db)):
-        new_post = Post(**post_in.dict())
+    async def create_post(self, post_in: PostCreate, db_session: Session = Depends(get_db)):
+        new_post = Post(**post_in.model_dump())
 
         db_session.add(new_post)
         db_session.commit()
@@ -17,7 +17,7 @@ class PostService:
 
         return new_post
     
-    async def update_post(self, post_id: int, post_in: PostSchema, db_session: Session = Depends(get_db)):
+    async def update_post(self, post_id: int, post_in: PostCreate, db_session: Session = Depends(get_db)):
         post = db_session.query(Post).filter(Post.id == post_id).one_or_none()
 
         if post is None:
